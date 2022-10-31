@@ -49,6 +49,10 @@ module.exports = {
             console.error(e)
         } finally {
             await guildProfile.save().catch(console.error);
+
+            await interaction.reply({
+                content: "Added!"
+            })
         }
     }
 }

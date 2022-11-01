@@ -21,8 +21,6 @@ module.exports = {
                 todoItems: [],
             });
         }
-
-        const localDate = new Date(Date.now()) // Used to grab UTC offset before creating the desired CRON date
         
         const itemDate = new Date(interaction.options.getNumber('year'),
                                     interaction.options.getNumber('month')-1,
@@ -32,18 +30,18 @@ module.exports = {
                                     0,0)
 
         console.log(itemDate)
+        
 
         try {
             var remindJob = new cron.CronJob(
                 itemDate,
                 function(){
-                    console.log("CRON TRIGGERED")
-                    //TODO add DM functionality
+                    reminderMessage = "Reminder: " + interaction.options.getString('text')
+                    interaction.user.send(reminderMessage)
                 },
                 null,
                 true
             )
-            console.log(remindJob)
 
             guildProfile.todoItems.push({
                 idNum: guildProfile.todoItems.length+1,
@@ -56,7 +54,7 @@ module.exports = {
             await guildProfile.save().catch(console.error);
 
             await interaction.reply({
-                content: "Added!"
+                content: "Added! I'll remind you to \"" + interaction.options.getString('text') + "\" at " + itemDate
             })
         }
     }

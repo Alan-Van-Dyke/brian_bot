@@ -21,6 +21,8 @@ module.exports = {
                 todoItems: [],
             });
         }
+
+        const localDate = new Date(Date.now()) // Used to grab UTC offset before creating the desired CRON date
         
         const itemDate = new Date(interaction.options.getNumber('year'),
                                     interaction.options.getNumber('month')-1,
@@ -29,11 +31,14 @@ module.exports = {
                                     interaction.options.getNumber('minute'),
                                     0,0)
 
+        console.log(itemDate)
+
         try {
             var remindJob = new cron.CronJob(
                 itemDate,
                 function(){
-                    //TODO SEND A DM WITH THE REMINDER
+                    console.log("CRON TRIGGERED")
+                    //TODO add DM functionality
                 },
                 null,
                 true

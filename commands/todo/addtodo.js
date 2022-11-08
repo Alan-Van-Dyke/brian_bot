@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const Guild = require("../../schemas/guild");
-const cron = require('cron');
+const cron = require("cron")
 const Mongoose = require("mongoose");
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
         .addNumberOption((option) => option.setName('year').setDescription('The year you want to be reminded.').setRequired(true))
         .addNumberOption((option) => option.setName('hour').setDescription('The time you want the be reminded (24H).').setRequired(true))
         .addNumberOption((option) => option.setName('minute').setDescription('The time you want to be reminded (24H).').setRequired(true)),
+    
     async execute(interaction, client) {
         guildProfile = await Guild.findOne({ guildId: interaction.guild.id });
         if (!guildProfile) {
@@ -29,10 +30,10 @@ module.exports = {
                                     interaction.options.getNumber('minute'),
                                     0,0)
 
-        console.log(itemDate)
         
 
         try {
+
             var remindJob = new cron.CronJob(
                 itemDate,
                 function(){
@@ -44,7 +45,6 @@ module.exports = {
             )
 
             guildProfile.todoItems.push({
-                idNum: guildProfile.todoItems.length+1,
                 text: interaction.options.getString('text'),
                 remindDate: itemDate
             })

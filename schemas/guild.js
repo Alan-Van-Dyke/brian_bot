@@ -4,7 +4,6 @@ const guildSchema = new Mongoose.Schema({
     guildId: String,
     guildName: String,
     todoItems: [{
-        idNum: Number,
         text: String,
         remindDate: Date,
     }],

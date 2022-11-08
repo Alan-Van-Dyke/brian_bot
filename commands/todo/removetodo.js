@@ -19,14 +19,13 @@ module.exports = {
         }
 
         todos = guildProfile.todoItems
-        console.log("LOOK UNDER HERE")
-        console.log(todos[0])
+        
 
         // [0, 1, 2, 3]
         idToRemove = interaction.options.getNumber('id')
 
-        updated_todos = todos.filter(item => item.idNum !== idToRemove)
-        console.log(updated_todos)
+        updated_todos = todos.filter((item, index) => index !== idToRemove)
+        
         
 
         guildProfile.todoItems = updated_todos

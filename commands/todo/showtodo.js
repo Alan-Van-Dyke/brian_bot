@@ -25,19 +25,18 @@ module.exports = {
 
 
         if(guildProfile.todoItems.length > 0){
-            console.log(guildProfile.todoItems)
 
-            guildProfile.todoItems.forEach((item) => {
-                var dateString = item.remindDate.getMonth() + "/" + item.remindDate.getDay() + " at " + item.remindDate.getHours() + ":" + item.remindDate.getMinutes()
+            guildProfile.todoItems.forEach((item, index) => {
+                var dateString = item.remindDate.toLocaleString('en-us', {weekday: 'long'}) + " " + item.remindDate.toLocaleString('en-us')
                 var contentString;
-                if(item.text.length > 50){
-                    contentString = item.text.substring(0,48) + "..."
+                if(item.text.length > 25){
+                    contentString = item.text.substring(0,20) + "..."
                 } else {
                     contentString = item.text
                 }
                 
 
-                embedIdVal = embedIdVal + item.idNum + "\n";
+                embedIdVal = embedIdVal + index + "\n";
                 embedContentVal = embedContentVal + contentString + "\n";
                 embedDateVal = embedDateVal + dateString + "\n";
                 

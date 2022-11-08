@@ -17,26 +17,49 @@ module.exports = {
 
         await guildProfile.save().catch(console.error);
 
-        const embed = new Discord.EmbedBuilder()
-            .setColor(0x00FF00)
-            .setTitle(guildProfile.guildName + " Todo List")
-            .setFields({name: "ID", value: "\u200b", inline: true},
-                       {name: "Content", value: "\u200b", inline: true},
-                       {name: "Date", value: "\u200b", inline:true})
+        var reply = ""
+
+        var embedIdVal = "\n";
+        var embedContentVal = "\n";
+        var embedDateVal = "\n";
+
+
+        if(guildProfile.todoItems.length > 0){
+            console.log(guildProfile.todoItems)
+
+            guildProfile.todoItems.forEach((item) => {
+                var dateString = item.remindDate.getMonth() + "/" + item.remindDate.getDay() + " at " + item.remindDate.getHours() + ":" + item.remindDate.getMinutes()
+                var contentString;
+                if(item.text.length > 50){
+                    contentString = item.text.substring(0,48) + "..."
+                } else {
+                    contentString = item.text
+                }
+                
+
+                embedIdVal = embedIdVal + item.idNum + "\n";
+                embedContentVal = embedContentVal + contentString + "\n";
+                embedDateVal = embedDateVal + dateString + "\n";
+                
+            })
         
-        guildProfile.todoItems.forEach((item) => {
-            const dateString = item.remindDate.getMonth() + "/" + item.remindDate.getDay() + " at " + item.remindDate.getHours() + ":" + item.remindDate.getMinutes()
 
-            console.log(item.idNum)
-            embed.addFields({name: "\u200b", value: item.idNum + "", inline:true},
-                            {name: "\u200b", value: item.text, inline:true},
-                            {name: "\u200b", value: dateString, inline:true})
-        })
+            const embed = new Discord.EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle(guildProfile.guildName + " Todo List")
+                .setFields({name: "ID", value: embedIdVal, inline: true},
+                        {name: "Content", value: embedContentVal, inline: true},
+                        {name: "Date", value: embedDateVal, inline:true})
 
-        console.log(interaction.channel.send({embeds: [embed]}))
+            interaction.channel.send({embeds: [embed]})
+
+            reply = "done!"
+        } else {
+            reply = "No todo items found"
+        }
 
         await interaction.reply({
-            content: "done!"
+            content: reply
         })
     },
 };

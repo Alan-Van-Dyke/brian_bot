@@ -41,7 +41,8 @@ module.exports = {
             })
 
             //pull the added item for scheduling
-            added_item = guildProfile.todoItems[guildProfile.todoItems.length-1]
+            new_length = guildProfile.todoItems.length
+            added_item = guildProfile.todoItems[new_length-1]
 
             //start the cron job to DM a reminder
             //the first parameter is the name, always in the format
@@ -53,6 +54,9 @@ module.exports = {
                 function(){
                     reminderMessage = "Reminder: " + interaction.options.getString('text')
                     interaction.user.send(reminderMessage)
+
+                    guildProfile.todoItems = guildProfile.todoItems.filter((item, index) => index !== new_length-1)
+                    guildProfile.save()
                 }
             )
 

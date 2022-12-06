@@ -5,6 +5,7 @@ const Mongoose = require("mongoose");
 module.exports = {
     data: new Discord.SlashCommandBuilder().setName("showtodo").setDescription("Show the current todo list"),
     async execute(interaction, client) {
+        //Get the profile, or create a new one if nothing exists
         guildProfile = await Guild.findOne({ guildId: interaction.guild.id });
         if (!guildProfile) {
             guildProfile = await new Guild({
@@ -17,6 +18,8 @@ module.exports = {
 
         await guildProfile.save().catch(console.error);
 
+
+        //initialize strings to be appended to for each column
         var reply = ""
 
         var embedIdVal = "\n";
@@ -26,6 +29,7 @@ module.exports = {
 
         if(guildProfile.todoItems.length > 0){
 
+            //for each todo item, add ID, Content, and Date to the embed strings. Separate by newlines
             guildProfile.todoItems.forEach((item, index) => {
                 var dateString = item.remindDate.toLocaleString('en-us', {weekday: 'long'}) + " " + item.remindDate.toLocaleString('en-us')
                 var contentString;
@@ -42,7 +46,7 @@ module.exports = {
                 
             })
         
-
+            //Build the embed and send to the channel where the command was sent
             const embed = new Discord.EmbedBuilder()
                 .setColor(0x00FF00)
                 .setTitle(guildProfile.guildName + " Todo List")

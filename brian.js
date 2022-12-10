@@ -46,18 +46,20 @@ var guildIdList = []
 client.once('ready', () => {
     guildIdList = client.guilds.cache.map(guild => guild.id)
     console.log("BrianBot is running!")
+
+    //constant client ID for the discord bot
+    const clientId = "1015423459666448385";
+
+    const rest = new REST({ version: "9" }).setToken(process.env.token);
+    try {
+        guildIdList.forEach((guildId) => {
+            rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+                body: client.commandArray,
+            });
+        });
+    } catch (e) {
+        console.error(e);
+    }
+
 })
 
-//constand client ID for the discord bot
-const clientId = "1015423459666448385";
-
-const rest = new REST({ version: "9" }).setToken(process.env.token);
-try {
-    guildIdList.forEach((guildId) => {
-        rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-            body: client.commandArray,
-        });
-    });
-} catch (e) {
-    console.error(e);
-}

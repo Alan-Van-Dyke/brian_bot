@@ -21,20 +21,5 @@ module.exports = (client) => {
                 console.log("Registered command " + command.data.name + ".");
             }
         }
-
-        const clientId = "1015423459666448385";
-        const temp = client.guilds.cache
-        console.log(temp)
-        const guildIds = ["785363246868725792", "1051167179141283991"];
-        const rest = new REST({ version: "9" }).setToken(process.env.token);
-        try {
-            await guildIds.forEach((guildId) => {
-                rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-                    body: client.commandArray,
-                });
-            });
-        } catch (e) {
-            console.error(e);
-        }
     };
 };

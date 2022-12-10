@@ -37,3 +37,23 @@ client.login(token).then(() => {
 
 //register all commands and push them to all servers in mongo
 client.handleCommands();
+
+const guildIdList = {}
+
+client.once('ready', () => {
+    guildIdList = client.guilds.cache
+    console.log(guildIdList)
+})
+
+const clientId = "1015423459666448385";
+
+const rest = new REST({ version: "9" }).setToken(process.env.token);
+try {
+    await guildIdList.keys().forEach((guildId) => {
+        rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+            body: client.commandArray,
+        });
+    });
+} catch (e) {
+    console.error(e);
+}

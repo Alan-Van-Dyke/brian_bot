@@ -1,13 +1,13 @@
 const Discord = require('discord.js')
 const Guild = require("../../schemas/guild");
+const schedule = require('node-schedule')
 const Mongoose = require("mongoose");
-
-//TODO - Currently just removes all items for testing purposed. 
 
 module.exports = {
     data: new Discord.SlashCommandBuilder().setName('removetodo').setDescription('Remove an item from the current todo list')
             .addNumberOption((option) => option.setName('id').setDescription('The ID of the object to be removed').setRequired(true)),
     async execute(interaction, client) {
+        //Get the profile, or create a new one if nothing exists
         guildProfile = await Guild.findOne({ guildId: interaction.guild.id });
         if (!guildProfile) {
             guildProfile = await new Guild({
@@ -19,19 +19,23 @@ module.exports = {
         }
 
         todos = guildProfile.todoItems
-        console.log("LOOK UNDER HERE")
-        console.log(todos[0])
-
-        // [0, 1, 2, 3]
-        idToRemove = interaction.options.getNumber('id')
-
-        updated_todos = todos.filter(item => item.idNum !== idToRemove)
-        console.log(updated_todos)
         
+        //Find the item we're removing. save it's ID so we can cancel the cron job
+        idToRemove = interaction.options.getNumber('id')
+        item_to_remove = guildProfile.todoItems[idToRemove]
+        removed_id = item_to_remove["_id"].toString()
+
+        //pull out the removed todo item by index. Update the list in Mongo
+        updated_todos = todos.filter((item, index) => index !== idToRemove)
 
         guildProfile.todoItems = updated_todos
 
         await guildProfile.save().catch(console.error);
+
+        //cancel the cron job with the ID saved earlier
+        job_to_cancel = schedule.scheduledJobs["remind_"+removed_id]
+        console.log(job_to_cancel)
+        job_to_cancel.cancel()
 
         await interaction.reply({
             content: "Removed!"

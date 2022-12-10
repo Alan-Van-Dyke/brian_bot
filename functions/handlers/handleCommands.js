@@ -13,6 +13,7 @@ module.exports = (client) => {
                 .filter((file) => file.endsWith(".js"));
 
             for (const file of commandFiles) {
+                //register all commands in the client directory
                 const command = require(`../../commands/${folder}/${file}`);
 
                 client.commands.set(command.data.name, command);
@@ -22,11 +23,15 @@ module.exports = (client) => {
         }
 
         const clientId = "1015423459666448385";
-        const guildId = "785363246868725792";
+        const temp = client.guilds.cache
+        console.log(temp)
+        const guildIds = ["785363246868725792", "1051167179141283991"];
         const rest = new REST({ version: "9" }).setToken(process.env.token);
         try {
-            await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-                body: client.commandArray,
+            await guildIds.forEach((guildId) => {
+                rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+                    body: client.commandArray,
+                });
             });
         } catch (e) {
             console.error(e);

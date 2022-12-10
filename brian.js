@@ -4,8 +4,6 @@ const fs = require('fs');
 
 require('dotenv').config();
 
-//TUTORIAL LINK https://www.youtube.com/watch?v=6IgOXmQMT68
-
 const token = process.env.token;
 const dbtoken = process.env.dbtoken
 
@@ -16,6 +14,7 @@ const client = new Discord.Client({
 client.commands = new Discord.Collection();
 client.commandArray = [];
 
+//require all functions defined in the functions directory
 const funcFolders = fs.readdirSync('./functions');
 for (const folder of funcFolders) {
     const funcFiles = fs.readdirSync(`./functions/${folder}`).filter((f) => f.endsWith('.js'));
@@ -25,8 +24,8 @@ for (const folder of funcFolders) {
     }
 }
 
+//set event callback functions to those defined in /events
 client.handleEvents();
-client.handleCommands();
 
 client.login(token).then(() => {
     client.user.setActivity('BrianBot')
@@ -35,3 +34,6 @@ client.login(token).then(() => {
 (async () => {
     await Mongoose.connect(dbtoken).catch(console.error)
 })()
+
+//register all commands and push them to all servers in mongo
+client.handleCommands();

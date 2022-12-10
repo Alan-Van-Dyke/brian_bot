@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const Mongoose = require('mongoose')
 const fs = require('fs');
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
 
 require('dotenv').config();
 
@@ -38,10 +40,10 @@ client.login(token).then(() => {
 //register all commands and push them to all servers in mongo
 client.handleCommands();
 
-const guildIdList = {}
+var guildIdList = []
 
 client.once('ready', () => {
-    guildIdList = client.guilds.cache
+    guildIdList = client.guilds.cache.map(guild => guild.id)
     console.log(guildIdList)
 })
 
@@ -49,7 +51,7 @@ const clientId = "1015423459666448385";
 
 const rest = new REST({ version: "9" }).setToken(process.env.token);
 try {
-    await guildIdList.keys().forEach((guildId) => {
+    guildIdList.keys().forEach((guildId) => {
         rest.put(Routes.applicationGuildCommands(clientId, guildId), {
             body: client.commandArray,
         });

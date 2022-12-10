@@ -34,8 +34,11 @@ module.exports = {
 
         //cancel the cron job with the ID saved earlier
         job_to_cancel = schedule.scheduledJobs["remind_"+removed_id]
-        console.log(job_to_cancel)
-        job_to_cancel.cancel()
+        //If there is no job, we still want to remove the list item without throwing an error
+        //This happens when the bot is reset - all cron jobs are deleted, but the list items persist
+        if(job_to_cancel) { 
+            job_to_cancel.cancel()
+        }
 
         await interaction.reply({
             content: "Removed!"

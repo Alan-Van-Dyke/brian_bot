@@ -51,7 +51,7 @@ const clientId = "1015423459666448385";
 
 const rest = new REST({ version: "9" }).setToken(process.env.token);
 try {
-    guildIdList.keys().forEach((guildId) => {
+    guildIdList.forEach((guildId) => {
         rest.put(Routes.applicationGuildCommands(clientId, guildId), {
             body: client.commandArray,
         });

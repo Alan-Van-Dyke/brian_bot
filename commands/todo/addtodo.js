@@ -9,8 +9,8 @@ module.exports = {
         .addNumberOption((option) => option.setName('month').setDescription('The month you want to be reminded.').setRequired(true))
         .addNumberOption((option) => option.setName('day').setDescription('The day you want to be reminded.').setRequired(true))
         .addNumberOption((option) => option.setName('year').setDescription('The year you want to be reminded.').setRequired(true))
-        .addNumberOption((option) => option.setName('hour').setDescription('The time you want the be reminded (24H).').setRequired(true))
-        .addNumberOption((option) => option.setName('minute').setDescription('The time you want to be reminded (24H).').setRequired(true)),
+        .addNumberOption((option) => option.setName('hour').setDescription('The hour you want to be reminded (0-24)').setRequired(true))
+        .addNumberOption((option) => option.setName('minute').setDescription('The minutes past the hour you want to be reminded.').setRequired(true)),
     
     async execute(interaction, client) {
         //Get the profile, or create a new one if nothing exists

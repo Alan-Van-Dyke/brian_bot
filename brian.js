@@ -43,16 +43,14 @@ client.handleCommands();
 //constant client ID for the discord bot
 const clientId = "1015423459666448385";
 
-var guildIdList = []
+const rest = new REST({ version: "9" }).setToken(process.env.token);
 
 //define the listener for ready here instead of in handleEvents because we need to get the list of active guilds
 client.once('ready', () => {
+    var guildIdList = []
     guildIdList = client.guilds.cache.map(guild => guild.id)
     console.log("BrianBot is running!")
 
-    
-
-    const rest = new REST({ version: "9" }).setToken(process.env.token);
     try {
         guildIdList.forEach((guildId) => {
             rest.put(Routes.applicationGuildCommands(clientId, guildId), {

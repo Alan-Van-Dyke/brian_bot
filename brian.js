@@ -40,6 +40,9 @@ client.login(token).then(() => {
 //register all commands and push them to all servers in mongo
 client.handleCommands();
 
+//constant client ID for the discord bot
+const clientId = "1015423459666448385";
+
 var guildIdList = []
 
 //define the listener for ready here instead of in handleEvents because we need to get the list of active guilds
@@ -47,8 +50,7 @@ client.once('ready', () => {
     guildIdList = client.guilds.cache.map(guild => guild.id)
     console.log("BrianBot is running!")
 
-    //constant client ID for the discord bot
-    const clientId = "1015423459666448385";
+    
 
     const rest = new REST({ version: "9" }).setToken(process.env.token);
     try {
@@ -61,5 +63,11 @@ client.once('ready', () => {
         console.error(e);
     }
 
+})
+
+client.on('guildCreate', guild => {
+    rest.put(Routes.applicationGuildCommands(clientId, guild.id), {
+        body: client.commandArray
+    })
 })
 
